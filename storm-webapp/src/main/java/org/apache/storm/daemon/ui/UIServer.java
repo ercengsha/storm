@@ -153,7 +153,8 @@ public class UIServer {
                     + "in a development environment and not from a packaged release");
             String developmentStaticFileLocation =
                     UIServer.class.getProtectionDomain().getCodeSource().getLocation().getPath()
-                            + "WEB-INF";
+                            + "/WEB-INF";
+//                            + "WEB-INF";
             if (Files.exists(Paths.get(developmentStaticFileLocation))) {
                 holderHome.setInitParameter("resourceBase", developmentStaticFileLocation);
             } else {

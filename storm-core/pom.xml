@@ -290,10 +290,10 @@
                             <testNamespaces>
                                 <testNamespace>${clojure.test.set}</testNamespace>
                             </testNamespaces>
-                            <testDeclaredNamespaceOnly>${clojure.test.declared.namespace.only}</testDeclaredNamespaceOnly>
-                            <configuration>
-                                <clojureOptions>-Dstorm.home=${project.basedir}/target/testhome</clojureOptions>
-                            </configuration>
+<!--                            <testDeclaredNamespaceOnly>${clojure.test.declared.namespace.only}</testDeclaredNamespaceOnly>-->
+<!--                            <configuration>-->
+<!--                                <clojureOptions>-Dstorm.home=${project.basedir}/target/testhome</clojureOptions>-->
+<!--                            </configuration>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -546,6 +546,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.2.0</version>
                         <executions>
                             <execution>
                                 <id>copy-build-scripts</id>
