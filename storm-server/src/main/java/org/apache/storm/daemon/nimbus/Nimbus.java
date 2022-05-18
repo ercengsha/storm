@@ -644,12 +644,17 @@ public class Nimbus implements Iface, Shutdownable, DaemonCommon {
 
     private static IScheduler wrapAsBlacklistScheduler(Map<String, Object> conf, IScheduler scheduler,
         StormMetricsRegistry metricsRegistry) {
+        LOG.info("wrapAsBlacklistScheduler");
+        LOG.info("IScheduler.config:" + JSONValue.toJSONString(scheduler.config()));
         BlacklistScheduler blacklistWrappedScheduler = new BlacklistScheduler(scheduler);
         blacklistWrappedScheduler.prepare(conf, metricsRegistry);
         return blacklistWrappedScheduler;
     }
 
     private static IScheduler makeScheduler(Map<String, Object> conf, INimbus inimbus) {
+        LOG.info("makeScheduler:");
+        LOG.info("inimbus.getForcedScheduler().toString():" + inimbus.getForcedScheduler().toString());
+
         String schedClass = (String) conf.get(DaemonConfig.STORM_SCHEDULER);
         IScheduler scheduler = inimbus == null ? null : inimbus.getForcedScheduler();
         if (scheduler != null) {

@@ -43,8 +43,12 @@ public class WordCountTopology extends ConfigurableTopology {
 
         builder.setSpout("spout", new RandomSentenceSpout(), 5);
 
-        builder.setBolt("split", new SplitSentence(), 8).shuffleGrouping("spout");
-        builder.setBolt("count", new WordCountBolt(), 12).fieldsGrouping("split", new Fields("word"));
+        builder.setBolt("split", new SplitSentence(), 8)
+                .shuffleGrouping("spout");
+        builder.setBolt("count", new WordCountBolt(), 12)
+                .fieldsGrouping("split", new Fields("word"));
+
+//        builder.setBolt("", new StatefulTopology.StatefulSumBolt("aa"))
 
         conf.setDebug(true);
 

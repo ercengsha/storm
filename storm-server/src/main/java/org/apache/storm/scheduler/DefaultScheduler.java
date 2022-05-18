@@ -24,12 +24,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.apache.storm.daemon.nimbus.Nimbus;
 import org.apache.storm.metric.StormMetricsRegistry;
 import org.apache.storm.utils.Utils;
+import org.json.simple.JSONValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultScheduler implements IScheduler {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultScheduler.class);
 
     private static Set<WorkerSlot> badSlots(Map<WorkerSlot, List<ExecutorDetails>> existingSlots, int numExecutors, int numWorkers) {
+        LOG.info("DefaultScheduler->badSlots");
         if (numWorkers != 0) {
             Map<Integer, Integer> distribution = Utils.integerDivided(numExecutors, numWorkers);
             Set<WorkerSlot> slots = new HashSet<WorkerSlot>();
@@ -55,6 +62,7 @@ public class DefaultScheduler implements IScheduler {
     }
 
     public static Set<WorkerSlot> slotsCanReassign(Cluster cluster, Set<WorkerSlot> slots) {
+        LOG.info("DefaultScheduler->slotsCanReassign");
         Set<WorkerSlot> result = new HashSet<WorkerSlot>();
         for (WorkerSlot slot : slots) {
             if (!cluster.isBlackListed(slot.getNodeId())) {
@@ -67,10 +75,12 @@ public class DefaultScheduler implements IScheduler {
                 }
             }
         }
+        LOG.info("DefaultScheduler->slotsCanReassign->result:" + JSONValue.toJSONString(result));
         return result;
     }
 
     public static void defaultSchedule(Topologies topologies, Cluster cluster) {
+        LOG.info("DefaultScheduler->defaultSchedule");
         for (TopologyDetails topology : cluster.needsSchedulingTopologies()) {
             List<WorkerSlot> availableSlots = cluster.getAvailableSlots();
             Set<ExecutorDetails> allExecutors = topology.getExecutors();
@@ -81,9 +91,11 @@ public class DefaultScheduler implements IScheduler {
             for (List<ExecutorDetails> list : aliveAssigned.values()) {
                 aliveExecutors.addAll(list);
             }
+            LOG.info("DefaultScheduler->defaultSchedule->aliveExecutors:" + JSONValue.toJSONString(aliveExecutors));
 
             Set<WorkerSlot> canReassignSlots = slotsCanReassign(cluster, aliveAssigned.keySet());
             int totalSlotsToUse = Math.min(topology.getNumWorkers(), canReassignSlots.size() + availableSlots.size());
+            LOG.info("DefaultScheduler->defaultSchedule->totalSlotsToUse:" + totalSlotsToUse);
 
             Set<WorkerSlot> badSlots = null;
             if (totalSlotsToUse > aliveAssigned.size() || !allExecutors.equals(aliveExecutors)) {
@@ -104,6 +116,7 @@ public class DefaultScheduler implements IScheduler {
 
     @Override
     public void schedule(Topologies topologies, Cluster cluster) {
+        LOG.info("DefaultScheduler->schedule");
         defaultSchedule(topologies, cluster);
     }
 

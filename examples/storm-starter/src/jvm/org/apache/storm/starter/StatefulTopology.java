@@ -18,13 +18,17 @@
 
 package org.apache.storm.starter;
 
+import java.util.List;
 import java.util.Map;
 import org.apache.storm.Config;
 import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.GlobalStreamId;
+import org.apache.storm.grouping.CustomStreamGrouping;
 import org.apache.storm.starter.spout.RandomIntegerSpout;
 import org.apache.storm.state.KeyValueState;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
+import org.apache.storm.task.WorkerTopologyContext;
 import org.apache.storm.topology.BasicOutputCollector;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.TopologyBuilder;
@@ -66,9 +70,19 @@ public class StatefulTopology {
     public static void main(String[] args) throws Exception {
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("spout", new RandomIntegerSpout());
-        builder.setBolt("partialsum", new StatefulSumBolt("partial"), 1).shuffleGrouping("spout");
-        builder.setBolt("printer", new PrinterBolt(), 2).shuffleGrouping("partialsum");
-        builder.setBolt("total", new StatefulSumBolt("total"), 1).shuffleGrouping("printer");
+        builder.setBolt("partialsum", new StatefulSumBolt("partial"), 1)
+                .shuffleGrouping("spout");
+
+        builder.setBolt("printer", new PrinterBolt(), 2)
+                .shuffleGrouping("partialsum");
+
+        builder.setBolt("total", new StatefulSumBolt("total"), 1)
+                .shuffleGrouping("printer");
+
+
+        builder.setBolt("total2", new StatefulSumBolt("total2"), 2)
+                .customGrouping("aa", new CustomStreamGroupingSelf());
+
         Config conf = new Config();
         conf.setDebug(false);
         String topoName = "test";
@@ -132,5 +146,24 @@ public class StatefulTopology {
             ofd.declare(new Fields("value"));
         }
 
+    }
+
+
+    // CustomStreamGroupingSelf
+    public static class CustomStreamGroupingSelf implements CustomStreamGrouping {
+        private static final Logger LOG = LoggerFactory.getLogger(StatefulTopology.class);
+
+        private List<Integer> tasks;
+
+        @Override
+        public void prepare(WorkerTopologyContext context, GlobalStreamId stream, List<Integer> targetTasks) {
+            this.tasks = targetTasks;
+            LOG.info(tasks.toString());
+        }
+
+        @Override
+        public List<Integer> chooseTasks(int taskId, List<Object> values) {
+            return null;
+        }
     }
 }

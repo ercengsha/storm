@@ -35,6 +35,7 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
   private static final org.apache.storm.thrift.protocol.TField CUSTOM_OBJECT_FIELD_DESC = new org.apache.storm.thrift.protocol.TField("custom_object", org.apache.storm.thrift.protocol.TType.STRUCT, (short)6);
   private static final org.apache.storm.thrift.protocol.TField CUSTOM_SERIALIZED_FIELD_DESC = new org.apache.storm.thrift.protocol.TField("custom_serialized", org.apache.storm.thrift.protocol.TType.STRING, (short)7);
   private static final org.apache.storm.thrift.protocol.TField LOCAL_OR_SHUFFLE_FIELD_DESC = new org.apache.storm.thrift.protocol.TField("local_or_shuffle", org.apache.storm.thrift.protocol.TType.STRUCT, (short)8);
+  private static final org.apache.storm.thrift.protocol.TField SELF_TEST_FIELD_DESC = new org.apache.storm.thrift.protocol.TField("self_test", org.apache.storm.thrift.protocol.TType.STRUCT, (short)9);
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.storm.thrift.TFieldIdEnum {
@@ -45,7 +46,8 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
     DIRECT((short)5, "direct"),
     CUSTOM_OBJECT((short)6, "custom_object"),
     CUSTOM_SERIALIZED((short)7, "custom_serialized"),
-    LOCAL_OR_SHUFFLE((short)8, "local_or_shuffle");
+    LOCAL_OR_SHUFFLE((short)8, "local_or_shuffle"),
+    SELF_TEST((short)9, "self_test");
 
     private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -77,6 +79,8 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
           return CUSTOM_SERIALIZED;
         case 8: // LOCAL_OR_SHUFFLE
           return LOCAL_OR_SHUFFLE;
+        case 9: // SELF_TEST
+          return SELF_TEST;
         default:
           return null;
       }
@@ -137,6 +141,10 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
         new org.apache.storm.thrift.meta_data.FieldValueMetaData(org.apache.storm.thrift.protocol.TType.STRING        , true)));
     tmpMap.put(_Fields.LOCAL_OR_SHUFFLE, new org.apache.storm.thrift.meta_data.FieldMetaData("local_or_shuffle", org.apache.storm.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.storm.thrift.meta_data.StructMetaData(org.apache.storm.thrift.protocol.TType.STRUCT, NullStruct.class)));
+
+    tmpMap.put(_Fields.SELF_TEST, new org.apache.storm.thrift.meta_data.FieldMetaData("self_test", org.apache.storm.thrift.TFieldRequirementType.OPTIONAL,
+            new org.apache.storm.thrift.meta_data.StructMetaData(org.apache.storm.thrift.protocol.TType.STRUCT, NullStruct.class)));
+
     metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
     org.apache.storm.thrift.meta_data.FieldMetaData.addStructMetaDataMap(Grouping.class, metaDataMap);
   }
@@ -254,6 +262,11 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
           break;
         }
         throw new java.lang.ClassCastException("Was expecting value of type NullStruct for field 'local_or_shuffle', but got " + value.getClass().getSimpleName());
+      case SELF_TEST:
+        if (value instanceof NullStruct) {
+          break;
+        }
+        throw new java.lang.ClassCastException("Was expecting value of type NullStruct for field 'self_test', but got " + value.getClass().getSimpleName());
       default:
         throw new java.lang.IllegalArgumentException("Unknown field id " + setField);
     }
@@ -352,6 +365,16 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
             org.apache.storm.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
             return null;
           }
+        case SELF_TEST:
+          if (field.type == SELF_TEST_FIELD_DESC.type) {
+            NullStruct self_test;
+            self_test = new NullStruct();
+            self_test.read(iprot);
+            return self_test;
+          } else {
+            org.apache.storm.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            return null;
+          }
         default:
           throw new java.lang.IllegalStateException("setField wasn't null, but didn't match any of the case statements!");
       }
@@ -402,6 +425,10 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
       case LOCAL_OR_SHUFFLE:
         NullStruct local_or_shuffle = (NullStruct)value_;
         local_or_shuffle.write(oprot);
+        return;
+      case SELF_TEST:
+        NullStruct self_test = (NullStruct)value_;
+        self_test.write(oprot);
         return;
       default:
         throw new java.lang.IllegalStateException("Cannot write union with unknown field " + setField_);
@@ -461,6 +488,11 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
           local_or_shuffle = new NullStruct();
           local_or_shuffle.read(iprot);
           return local_or_shuffle;
+        case SELF_TEST:
+          NullStruct self_test;
+          self_test = new NullStruct();
+          self_test.read(iprot);
+          return self_test;
         default:
           throw new java.lang.IllegalStateException("setField wasn't null, but didn't match any of the case statements!");
       }
@@ -510,6 +542,9 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
       case LOCAL_OR_SHUFFLE:
         NullStruct local_or_shuffle = (NullStruct)value_;
         local_or_shuffle.write(oprot);
+      case SELF_TEST:
+        NullStruct self_test = (NullStruct)value_;
+        self_test.write(oprot);
         return;
       default:
         throw new java.lang.IllegalStateException("Cannot write union with unknown field " + setField_);
@@ -535,6 +570,8 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
         return CUSTOM_SERIALIZED_FIELD_DESC;
       case LOCAL_OR_SHUFFLE:
         return LOCAL_OR_SHUFFLE_FIELD_DESC;
+      case SELF_TEST:
+        return SELF_TEST_FIELD_DESC;
       default:
         throw new java.lang.IllegalArgumentException("Unknown field id " + setField);
     }
@@ -678,6 +715,20 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
     value_ = value;
   }
 
+  public NullStruct get_self_test() {
+    if (getSetField() == _Fields.SELF_TEST) {
+      return (NullStruct)getFieldValue();
+    } else {
+      throw new java.lang.RuntimeException("Cannot get field 'local_or_shuffle' because union is currently set to " + getFieldDesc(getSetField()).name);
+    }
+  }
+
+  public void set_self_test(NullStruct value) {
+    if (value == null) throw new java.lang.NullPointerException();
+    setField_ = _Fields.SELF_TEST;
+    value_ = value;
+  }
+
   public boolean is_set_fields() {
     return setField_ == _Fields.FIELDS;
   }
@@ -717,6 +768,9 @@ public class Grouping extends org.apache.storm.thrift.TUnion<Grouping, Grouping.
     return setField_ == _Fields.LOCAL_OR_SHUFFLE;
   }
 
+  public boolean is_set_self_test() {
+    return setField_ == _Fields.SELF_TEST;
+  }
 
   public boolean equals(java.lang.Object other) {
     if (other instanceof Grouping) {

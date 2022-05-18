@@ -62,11 +62,13 @@ public class BlacklistScheduler implements IScheduler {
     private boolean blacklistSendAssignentFailures;
 
     public BlacklistScheduler(IScheduler underlyingScheduler) {
+        LOG.info("BlacklistScheduler->BlacklistScheduler construct");
         this.underlyingScheduler = underlyingScheduler;
     }
 
     @Override
     public void prepare(Map<String, Object> conf, StormMetricsRegistry metricsRegistry) {
+        LOG.info("BlacklistScheduler->prepare");
         LOG.info("Preparing black list scheduler");
         underlyingScheduler.prepare(conf, metricsRegistry);
         this.conf = conf;
@@ -113,6 +115,7 @@ public class BlacklistScheduler implements IScheduler {
 
     @Override
     public void schedule(Topologies topologies, Cluster cluster) {
+        LOG.info("BlacklistScheduler->schedule");
         LOG.debug("running Black List scheduler");
         LOG.debug("AssignableSlots: {}", cluster.getAssignableSlots());
         LOG.debug("AvailableSlots: {}", cluster.getAvailableSlots());
@@ -137,6 +140,7 @@ public class BlacklistScheduler implements IScheduler {
     }
 
     private void trackMissedHeartbeats(Map<String, SupervisorDetails> supervisors) {
+        LOG.info("BlacklistScheduler->trackMissedHeartbeats");
         Set<String> cachedSupervisorsKeySet = cachedSupervisors.keySet();
         Set<String> supervisorsKeySet = supervisors.keySet();
 
@@ -175,6 +179,7 @@ public class BlacklistScheduler implements IScheduler {
     }
 
     private Set<Integer> badSlots(SupervisorDetails supervisor, String supervisorKey) {
+        LOG.info("BlacklistScheduler->badSlots");
         Set<Integer> cachedSupervisorPorts = cachedSupervisors.get(supervisorKey);
         Set<Integer> supervisorPorts = supervisor.getAllPorts();
 
